@@ -11,9 +11,8 @@ import {
   IonToolbar,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
+import { clipboard,fileTray } from 'ionicons/icons';
 
-import { clipboard, copy, ellipsisVertical, fileTray, list } from 'ionicons/icons';
-import { HomePage } from "../../home.page";
 
 @Component({
   selector: 'app-navbar',
