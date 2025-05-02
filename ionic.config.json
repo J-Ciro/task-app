@@ -1,0 +1,7 @@
+{
+  "name": "TaskApp",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}
