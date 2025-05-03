@@ -1,20 +1,118 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>
-      Blank
-    </ion-title>
-  </ion-toolbar>
-</ion-header>
-
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Blank</ion-title>
+  <ion-header>
+    <ion-toolbar color="primary">
+      <ion-title>Task Dashboard</ion-title>
     </ion-toolbar>
   </ion-header>
 
-  <div id="container">
-    <strong>Ready to create an app?</strong>
-    <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
+  <div class="content-container">
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>Your Progress</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-grid>
+          <ion-row class="ion-text-center">
+            <ion-col size="4">
+              <h2>{{taskStats.total}}</h2>
+              <p>Total Tasks</p>
+            </ion-col>
+            <ion-col size="4">
+              <h2>{{taskStats.completed}}</h2>
+              <p>Completed</p>
+            </ion-col>
+            <ion-col size="4">
+              <h2>{{taskStats.pending}}</h2>
+              <p>Pending</p>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <ion-progress-bar
+                [value]="taskStats.completionPercentage / 100"
+                color="primary"
+              >
+              </ion-progress-bar>
+              <p class="ion-text-center">
+                {{taskStats.completionPercentage}}% complete
+              </p>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-card-content>
+    </ion-card>
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>
+          <ion-icon name="time" slot="start"></ion-icon>
+          Recent Pending Tasks
+        </ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-list
+          lines="none"
+          *ngIf="recentPendingTasks.length > 0; else noPendingTasks"
+        >
+          <ion-item *ngFor="let task of recentPendingTasks">
+            <ion-checkbox
+              slot="start"
+              [checked]="false"
+              (ionChange)="toggleTaskCompletion(task.id)"
+            >
+            </ion-checkbox>
+            <ion-label>{{task.title}}</ion-label>
+          </ion-item>
+        </ion-list>
+        <ng-template #noPendingTasks>
+          <p class="ion-text-center">No pending tasks. Great job!</p>
+        </ng-template>
+      </ion-card-content>
+    </ion-card>
+
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>
+          <ion-icon name="checkmark-done" slot="start"></ion-icon>
+          Recently Completed
+        </ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-list
+          lines="none"
+          *ngIf="recentCompletedTasks.length > 0; else noCompletedTasks"
+        >
+          <ion-item *ngFor="let task of recentCompletedTasks">
+            <ion-checkbox
+              slot="start"
+              [checked]="true"
+              (ionChange)="toggleTaskCompletion(task.id)"
+            >
+            </ion-checkbox>
+            <ion-label>{{task.title}}</ion-label>
+          </ion-item>
+        </ion-list>
+        <ng-template #noCompletedTasks>
+          <p class="ion-text-center">No completed tasks yet</p>
+        </ng-template>
+      </ion-card-content>
+    </ion-card>
   </div>
+
+  <ion-fab slot="fixed" vertical="bottom" horizontal="end">
+    <ion-fab-button
+      color="primary"
+      routerLink="/tasks"
+      [queryParams]="{openModal: 'true'}"
+    >
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+  <ion-button
+    expand="block"
+    fill="clear"
+    routerLink="/tasks"
+    [queryParams]="{filter: 'all'}"
+  >
+    View All Tasks
+  </ion-button>
 </ion-content>

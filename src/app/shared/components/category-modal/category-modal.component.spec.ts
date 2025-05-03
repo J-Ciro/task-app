@@ -1,19 +1,19 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
 
-import { CategoryFilterComponent } from './category-filter.component';
+import { CategoryModalComponent } from './category-modal.component';
 
-describe('CategoryFilterComponent', () => {
-  let component: CategoryFilterComponent;
-  let fixture: ComponentFixture<CategoryFilterComponent>;
+describe('CategoryModalComponent', () => {
+  let component: CategoryModalComponent;
+  let fixture: ComponentFixture<CategoryModalComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ CategoryFilterComponent ],
+      declarations: [ CategoryModalComponent ],
       imports: [IonicModule.forRoot()]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(CategoryFilterComponent);
+    fixture = TestBed.createComponent(CategoryModalComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   }));

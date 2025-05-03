@@ -1,0 +1,50 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Categories</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-item *ngIf="!editingCategory">
+    <ion-input
+      [(ngModel)]="newCategoryName"
+      placeholder="New category name"
+    ></ion-input>
+    <ion-button slot="end" (click)="addCategory()">Add</ion-button>
+  </ion-item>
+
+  <ion-item *ngIf="editingCategory">
+    <ion-input
+      [(ngModel)]="editingCategory.name"
+      placeholder="Edit category"
+    ></ion-input>
+    <ion-button slot="end" (click)="saveEdit()">Save</ion-button>
+    <ion-button slot="end" fill="clear" (click)="cancelEdit()"
+      >Cancel</ion-button
+    >
+  </ion-item>
+
+  <ion-list>
+    <ion-item-sliding *ngFor="let category of categories">
+      <ion-item>
+        <ion-label>
+          <h2>{{ category.name }}</h2>
+        </ion-label>
+        <div
+          slot="start"
+          [style.background]="category.color"
+          style="width: 20px; height: 20px; border-radius: 50%"
+        ></div>
+      </ion-item>
+
+      <ion-item-options side="end">
+        <ion-item-option color="primary" (click)="startEdit(category)">
+          <ion-icon name="create"></ion-icon>
+        </ion-item-option>
+        <ion-item-option color="danger" (click)="deleteCategory(category.id)">
+          <ion-icon name="trash"></ion-icon>
+        </ion-item-option>
+      </ion-item-options>
+    </ion-item-sliding>
+  </ion-list>
+</ion-content>

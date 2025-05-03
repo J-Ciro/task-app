@@ -1,32 +1,24 @@
 import { Component, OnInit } from '@angular/core';
 import {
-  IonContent,
-  IonHeader,
   IonIcon,
-  IonTab,
   IonTabBar,
   IonTabButton,
   IonTabs,
-  IonTitle,
-  IonToolbar,
+  IonLabel,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { clipboard,fileTray } from 'ionicons/icons';
-
+import { albums, clipboard, fileTray, home } from 'ionicons/icons';
 
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
-  imports: [IonContent, IonHeader, IonIcon, IonTab, IonTabBar, IonTabButton, IonTabs, IonTitle, IonToolbar],
+  imports: [IonTabs, IonTabBar, IonTabButton, IonIcon, IonLabel],
   styleUrls: ['./navbar.component.scss'],
 })
-export class NavbarComponent  implements OnInit {
-
-  constructor() { 
-
-    addIcons({clipboard, fileTray});
+export class NavbarComponent implements OnInit {
+  constructor() {
+    addIcons({ clipboard, fileTray, home, albums });
   }
 
   ngOnInit() {}
-
 }
