@@ -4,9 +4,7 @@ import {
   IonToolbar,
   IonTitle,
   IonContent,
-  IonButton,
   IonIcon,
-  IonButtons,
   IonFab,
   IonFabButton,
 } from '@ionic/angular/standalone';

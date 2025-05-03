@@ -18,7 +18,11 @@
         <ion-item-option color="primary" (click)="edit.emit(task)">
           Edit
         </ion-item-option>
-        <ion-item-option color="danger" (click)="delete.emit(task)">
+        <ion-item-option
+          color="danger"
+          (click)="delete.emit(task)"
+          id="open-delete-toast"
+        >
           Delete
         </ion-item-option>
       </ion-item-options>

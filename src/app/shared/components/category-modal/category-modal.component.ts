@@ -11,8 +11,6 @@ import {
   IonContent,
   IonItem,
   IonInput,
-  IonSelect,
-  IonSelectOption,
   IonLabel,
   IonFooter,
   ModalController,
