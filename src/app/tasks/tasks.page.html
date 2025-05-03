@@ -1,12 +1,6 @@
-<!-- tasks.page.html -->
 <ion-header>
   <ion-toolbar>
-    <ion-title>Tasks</ion-title>
-    <ion-buttons slot="end">
-      <ion-button (click)="openTaskModal()">
-        <ion-icon slot="icon-only" name="add"></ion-icon>
-      </ion-button>
-    </ion-buttons>
+    <ion-title>Categories</ion-title>
   </ion-toolbar>
 
   <app-task-filter
@@ -27,4 +21,9 @@
     (delete)="deleteTask($event)"
     (toggle)="toggleTaskCompletion($event)"
   ></app-task-list>
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button (click)="openTaskModal()">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
 </ion-content>

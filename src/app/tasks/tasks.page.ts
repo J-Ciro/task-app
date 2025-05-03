@@ -7,6 +7,8 @@ import {
   IonButton,
   IonIcon,
   IonButtons,
+  IonFab,
+  IonFabButton,
 } from '@ionic/angular/standalone';
 import { CommonModule } from '@angular/common';
 import { ModalController } from '@ionic/angular/standalone';
@@ -26,16 +28,16 @@ import { CategoryService } from '../services/category.service';
   styleUrls: ['./tasks.page.scss'],
   standalone: true,
   imports: [
+    IonFabButton,
     IonHeader,
     IonToolbar,
     IonTitle,
     IonContent,
-    IonButton,
     IonIcon,
-    IonButtons,
     CommonModule,
     TaskFilterComponent,
     TaskListComponent,
+    IonFab,
   ],
 })
 export class TasksPage {

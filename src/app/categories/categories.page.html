@@ -1,17 +1,27 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title> Categories </ion-title>
+  </ion-toolbar>
+</ion-header>
+
 <ion-content>
-  <app-category-form
-    [category]="editingCategory ? editingCategory : { name: newCategoryName }"
-    [editing]="!!editingCategory"
-    (save)="addCategory()"
-    (cancel)="cancelEdit()"
+  <app-category-list
+    [categories]="displayedCategories"
+    (edit)="openCategoryModal($event)"
+    (delete)="deleteCategory($event)"
   >
-  </app-category-form>
-  <ion-infinite-scroll>
-    <app-category-list
-      [categories]="displayedCategories"
-      (edit)="startEdit($event)"
-      (delete)="deleteCategory($event)"
-    >
-    </app-category-list>
+  </app-category-list>
+
+  <ion-infinite-scroll
+    (ionInfinite)="loadMoreCategories($event)"
+    threshold="100px"
+  >
+    <ion-infinite-scroll-content></ion-infinite-scroll-content>
   </ion-infinite-scroll>
+
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button (click)="openCategoryModal()">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
 </ion-content>

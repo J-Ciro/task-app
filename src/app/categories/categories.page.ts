@@ -16,13 +16,7 @@ import { CategoryFormComponent } from './components/category-form/category-form.
   selector: 'app-categories',
   templateUrl: 'categories.page.html',
   styleUrls: ['categories.page.scss'],
-  imports: [
-    IonicModule,
-    FormsModule,
-    CommonModule,
-    CategoryFormComponent,
-    CategoryListComponent,
-  ],
+  imports: [IonicModule, FormsModule, CommonModule, CategoryListComponent],
 })
 export class CategoriesPage {
   @ViewChild(IonInfiniteScroll) infiniteScroll!: IonInfiniteScroll;
@@ -47,10 +41,16 @@ export class CategoriesPage {
 
   loadCategories() {
     this.allCategories = this.categoryService.getCategories();
-    this.displayedCategories = [];
-    this.loadMoreCategories();
+    this.allCategories = [...this.allCategories].reverse();
+
+    this.displayedCategories = this.allCategories.slice(
+      0,
+      this.CATEGORY_CHUNK_SIZE
+    );
+
     if (this.infiniteScroll) {
-      this.infiniteScroll.disabled = false;
+      this.infiniteScroll.disabled =
+        this.displayedCategories.length >= this.allCategories.length;
     }
   }
 
@@ -72,6 +72,7 @@ export class CategoriesPage {
       }
     }, 1);
   }
+
   async openCategoryModal(category?: Category) {
     const modal = await this.modalCtrl.create({
       component: CategoryModalComponent,
@@ -81,61 +82,71 @@ export class CategoriesPage {
           : {
               id: '',
               name: '',
-              color: '#33FF57',
+              color: this.getRandomColor(),
             },
       },
     });
 
+    // Manejar el evento de guardar
     modal.onDidDismiss().then(({ data, role }) => {
       if (role === 'save') {
-        this.categoryService.saveCategory(data);
+        const categoryToSave = data.id
+          ? data
+          : { ...data, id: this.categoryService.generateId() };
+
+        this.categoryService.saveCategory(categoryToSave);
         this.loadCategories();
       } else if (role === 'delete') {
-        this.categoryService.deleteCategory(data);
+        this.categoryService.deleteCategory(data.id);
         this.loadCategories();
       }
     });
+
     await modal.present();
   }
+  // addCategory() {
+  //   if (this.newCategoryName.trim()) {
+  //     const newCategory: Category = {
+  //       id: this.categoryService.generateId(),
+  //       name: this.newCategoryName.trim(),
+  //       color: this.getRandomColor(),
+  //     };
 
-  addCategory() {
-    if (this.newCategoryName.trim()) {
-      const newCategory: Category = {
-        id: this.categoryService.generateId(),
-        name: this.newCategoryName.trim(),
-        color: this.getRandomColor(),
-      };
+  //     this.categoryService.saveCategory(newCategory);
+  //     this.newCategoryName = '';
+  //     this.allCategories = this.categoryService.getCategories();
 
-      this.categoryService.saveCategory(newCategory);
-      this.newCategoryName = '';
-      this.allCategories = this.categoryService.getCategories();
-      this.displayedCategories = [...this.allCategories];
-      if (this.infiniteScroll) {
-        this.infiniteScroll.disabled = true;
-      }
-    }
-  }
+  //     this.displayedCategories = this.allCategories.slice(
+  //       0,
+  //       this.CATEGORY_CHUNK_SIZE
+  //     );
+  //     if (this.infiniteScroll) {
+  //       this.infiniteScroll.disabled =
+  //         this.allCategories.length <= this.CATEGORY_CHUNK_SIZE;
+  //     }
+  //   }
+  // }
 
-  startEdit(category: Category) {
-    this.editingCategory = { ...category };
-  }
+  // startEdit(category: Category) {
+  //   this.editingCategory = { ...category };
+  // }
 
-  saveEdit() {
-    if (this.editingCategory) {
-      this.categoryService.saveCategory(this.editingCategory);
-      this.editingCategory = null;
-      this.loadCategories();
-    }
-  }
+  // saveEdit() {
+  //   if (this.editingCategory) {
+  //     this.categoryService.saveCategory(this.editingCategory);
+  //     this.editingCategory = null;
+  //     this.loadCategories();
+  //   }
+  // }
 
   deleteCategory(id: string) {
     this.categoryService.deleteCategory(id);
     this.loadCategories();
   }
 
-  cancelEdit() {
-    this.editingCategory = null;
-  }
+  // cancelEdit() {
+  //   this.editingCategory = null;
+  // }
 
   private getRandomColor(): string {
     const colors = ['#FF5733', '#33FF57', '#3357FF', '#F333FF', '#33FFF3'];

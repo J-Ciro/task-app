@@ -1,47 +1,43 @@
-<!-- src/app/shared/components/category-modal/category-modal.component.html -->
 <ion-header>
   <ion-toolbar>
-    <ion-title>{{ category.id ? "Edit Category" : "New Category" }}</ion-title>
+    <ion-title>{{
+      category.id ? "Editar Categoría" : "Nueva Categoría"
+    }}</ion-title>
     <ion-buttons slot="end">
-      <ion-button (click)="cancel.emit()">Cancel</ion-button>
+      <ion-button (click)="onCancel()">Cancelar</ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
-
 <ion-content class="ion-padding">
   <ion-item>
     <ion-input
       [(ngModel)]="category.name"
-      placeholder="Category name"
+      placeholder="Nombre de la categoría"
+      required
     ></ion-input>
   </ion-item>
 
   <ion-item>
     <ion-label>Color</ion-label>
-    <ion-select [(ngModel)]="category.color" interface="action-sheet">
-      <ion-select-option *ngFor="let color of colorOptions" [value]="color">
-        <div
-          [style.background]="color"
-          style="width: 20px; height: 20px; border-radius: 50%"
-        ></div>
-      </ion-select-option>
-    </ion-select>
+    <div class="color-preview" [style.background]="category.color"></div>
   </ion-item>
-</ion-content>
 
+  <div class="color-grid">
+    <div
+      *ngFor="let color of colorOptions"
+      class="color-option"
+      [style.background]="color"
+      [class.selected]="category.color === color"
+      (click)="category.color = color"
+    ></div>
+  </div>
+</ion-content>
 <ion-footer>
   <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-button
-        color="danger"
-        (click)="delete.emit(category.id)"
-        *ngIf="category.id"
-      >
-        Delete
+    <ion-buttons slot="end">
+      <ion-button (click)="onSave()" [disabled]="!category.name.trim()" strong>
+        Guardar
       </ion-button>
     </ion-buttons>
-    <ion-button slot="end" (click)="save.emit(category)" strong>
-      Save
-    </ion-button>
   </ion-toolbar>
 </ion-footer>

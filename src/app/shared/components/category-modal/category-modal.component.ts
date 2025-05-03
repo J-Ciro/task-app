@@ -1,58 +1,44 @@
-import {
-  IonHeader,
-  IonButton,
-  IonFooter,
-  IonItem,
-  IonToolbar,
-  IonButtons,
-  IonTitle,
-  IonContent,
-  IonInput,
-  IonSelect,
-  IonSelectOption,
-  IonCheckbox,
-  IonLabel,
-  IonIcon,
-  IonList,
-} from '@ionic/angular/standalone';
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Category } from '../../../models/category.model';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import {
+  IonHeader,
+  IonToolbar,
+  IonTitle,
+  IonButtons,
+  IonButton,
+  IonContent,
+  IonItem,
+  IonInput,
+  IonSelect,
+  IonSelectOption,
+  IonLabel,
+  IonFooter,
+  ModalController,
+} from '@ionic/angular/standalone';
 
 @Component({
   selector: 'app-category-modal',
   templateUrl: './category-modal.component.html',
   styleUrls: ['./category-modal.component.scss'],
+  standalone: true,
   imports: [
-    IonHeader,
-    IonItem,
-    IonToolbar,
-    IonButtons,
-    IonButton,
-    IonTitle,
-    IonContent,
-    IonInput,
-    IonSelect,
-    IonSelectOption,
-    IonButtons,
-    IonLabel,
     CommonModule,
     FormsModule,
+    IonHeader,
+    IonToolbar,
+    IonTitle,
+    IonButtons,
+    IonButton,
+    IonContent,
+    IonItem,
+    IonInput,
+    IonLabel,
     IonFooter,
   ],
 })
 export class CategoryModalComponent {
-  @Input() category: Category = {
-    id: '',
-    name: '',
-    color: this.getRandomColor(),
-  };
-
-  @Output() save = new EventEmitter<Category>();
-  @Output() cancel = new EventEmitter<void>();
-  @Output() delete = new EventEmitter<string>();
-
   colorOptions = [
     '#FF5733',
     '#33FF57',
@@ -66,9 +52,26 @@ export class CategoryModalComponent {
     '#33FFBD',
   ];
 
-  getRandomColor(): string {
-    return this.colorOptions[
-      Math.floor(Math.random() * this.colorOptions.length)
-    ];
+  @Input() category: Category = {
+    id: '',
+    name: '',
+    color:
+      this.colorOptions[Math.floor(Math.random() * this.colorOptions.length)],
+  };
+
+  constructor(private modalCtrl: ModalController) {}
+
+  onSave() {
+    if (this.category.name?.trim()) {
+      this.modalCtrl.dismiss({ ...this.category }, 'save');
+    }
+  }
+
+  onCancel() {
+    this.modalCtrl.dismiss(null, 'cancel');
+  }
+
+  onDelete() {
+    this.modalCtrl.dismiss({ ...this.category }, 'delete');
   }
 }

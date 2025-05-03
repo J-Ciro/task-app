@@ -7,6 +7,8 @@ import {
   IonLabel,
   IonItemOption,
   IonIcon,
+  IonInfiniteScroll,
+  IonContent,
 } from '@ionic/angular/standalone';
 import { Category } from 'src/app/models/category.model';
 import { CommonModule } from '@angular/common';
