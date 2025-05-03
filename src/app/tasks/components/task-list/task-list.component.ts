@@ -1,4 +1,11 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import {
+  Component,
+  Input,
+  Output,
+  EventEmitter,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+} from '@angular/core';
 import {
   IonList,
   IonItemSliding,
@@ -7,6 +14,9 @@ import {
   IonLabel,
   IonItemOptions,
   IonItemOption,
+  IonInfiniteScroll,
+  IonInfiniteScrollContent,
+  IonContent,
 } from '@ionic/angular/standalone';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -20,6 +30,7 @@ import { Task } from 'src/app/models/task.model';
   styleUrls: ['./task-list.component.scss'],
   standalone: true,
   imports: [
+    IonContent,
     IonList,
     IonItemSliding,
     IonItem,
@@ -27,17 +38,31 @@ import { Task } from 'src/app/models/task.model';
     IonLabel,
     IonItemOptions,
     IonItemOption,
+    IonInfiniteScroll,
+    IonInfiniteScrollContent,
     CommonModule,
     FormsModule,
     ScrollingModule,
+    IonList,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TaskListComponent {
-  @Input() tasks: Task[] = [];
+  @Input() set tasks(value: Task[]) {
+    this._allTasks = value;
+    this.displayedTasks = this._allTasks.slice(0, this.initialLoadCount);
+  }
   @Input() categories: Category[] = [];
   @Output() edit = new EventEmitter<Task>();
   @Output() delete = new EventEmitter<Task>();
   @Output() toggle = new EventEmitter<string>();
+
+  private _allTasks: Task[] = [];
+  displayedTasks: Task[] = [];
+  initialLoadCount = 20;
+  itemsPerLoad = 10;
+
+  constructor(private cdRef: ChangeDetectorRef) {}
 
   trackByTaskId(index: number, task: Task): string {
     return task.id;
@@ -47,5 +72,30 @@ export class TaskListComponent {
     if (!categoryId) return 'No Category';
     const category = this.categories.find((c) => c.id === categoryId);
     return category ? category.name : 'Unknown';
+  }
+
+  loadMore(event: any) {
+    setTimeout(() => {
+      const currentLength = this.displayedTasks.length;
+      const moreTasks = this._allTasks.slice(
+        currentLength,
+        currentLength + this.itemsPerLoad
+      );
+      this.displayedTasks = [...this.displayedTasks, ...moreTasks];
+
+      event.target.complete();
+
+      // Deshabilitar si hemos cargado todas las tareas
+      if (this.displayedTasks.length >= this._allTasks.length) {
+        event.target.disabled = true;
+      }
+
+      this.cdRef.detectChanges();
+    }, 500);
+  }
+
+  refresh() {
+    this.displayedTasks = this._allTasks.slice(0, this.initialLoadCount);
+    this.cdRef.detectChanges();
   }
 }
