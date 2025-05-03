@@ -1,5 +1,11 @@
 import { FirebaseService } from './../services/firebase.service';
-import { Component, ChangeDetectorRef, OnInit, OnDestroy } from '@angular/core';
+import {
+  Component,
+  ChangeDetectorRef,
+  OnInit,
+  OnDestroy,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import {
   IonHeader,
   IonToolbar,
@@ -43,6 +49,7 @@ import { Subscription } from 'rxjs';
     IonRefresher,
     IonRefresherContent,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TasksPage implements OnInit, OnDestroy {
   tasks: Task[] = [];
@@ -65,6 +72,14 @@ export class TasksPage implements OnInit, OnDestroy {
   }
 
   async ngOnInit() {
+    this.loadData();
+    Promise.all([
+      this.initializeFeatureFlags(),
+      (this.categories = this.categoryService.getCategories()),
+    ]);
+  }
+
+  private async initializeFeatureFlags() {
     try {
       await this.firebaseService.initializeRemoteConfig();
       this.firebaseService.setupAutoRefresh(300000);
@@ -72,16 +87,13 @@ export class TasksPage implements OnInit, OnDestroy {
         .watchFeature('add_task_feature_enabled')
         .subscribe((enabled) => {
           this.isAddTaskEnabled = enabled;
-          this.cdRef.detectChanges();
+          this.cdRef.markForCheck();
         });
     } catch (error) {
       console.error('Failed to initialize Remote Config:', error);
       this.isAddTaskEnabled = true;
     }
-
-    this.loadData();
   }
-
   ngOnDestroy() {
     if (this.featureSubscription) {
       this.featureSubscription.unsubscribe();
@@ -157,7 +169,6 @@ export class TasksPage implements OnInit, OnDestroy {
           return true;
       }
     });
-    this.cdRef.detectChanges();
   }
 
   resetCategoryFilter() {
@@ -176,16 +187,12 @@ export class TasksPage implements OnInit, OnDestroy {
   }
 
   onFilterStatusChange(status: 'all' | 'completed' | 'pending') {
-    setTimeout(() => {
-      this.filterStatus = status;
-      this.applyFilters();
-    }, 0);
+    this.filterStatus = status;
+    this.applyFilters();
   }
 
   onCategoryChange(categoryId: string | null) {
-    setTimeout(() => {
-      this.selectedCategoryId = categoryId;
-      this.applyFilters();
-    }, 0);
+    this.selectedCategoryId = categoryId;
+    this.applyFilters();
   }
 }
