@@ -1,6 +1,6 @@
 import { ModalController } from '@ionic/angular/standalone';
 import { IonicModule } from '@ionic/angular';
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { CategoryService } from '../services/category.service';
 import { Category } from '../models/category.model';
 import { CommonModule } from '@angular/common';
@@ -8,6 +8,7 @@ import { FormsModule } from '@angular/forms';
 import { CategoryModalComponent } from '../shared/components/category-modal/category-modal.component';
 import { addIcons } from 'ionicons';
 import { create, trash } from 'ionicons/icons';
+import { IonInfiniteScroll } from '@ionic/angular';
 
 @Component({
   selector: 'app-categories',
@@ -16,9 +17,14 @@ import { create, trash } from 'ionicons/icons';
   imports: [IonicModule, FormsModule, CommonModule],
 })
 export class CategoriesPage {
-  categories: Category[] = [];
+  @ViewChild(IonInfiniteScroll) infiniteScroll!: IonInfiniteScroll;
+
+  allCategories: Category[] = [];
+  displayedCategories: Category[] = [];
+
   newCategoryName = '';
   editingCategory: Category | null = null;
+  private readonly CATEGORY_CHUNK_SIZE = 20;
 
   constructor(
     private categoryService: CategoryService,
@@ -32,9 +38,32 @@ export class CategoriesPage {
   }
 
   loadCategories() {
-    this.categories = this.categoryService.getCategories();
+    this.allCategories = this.categoryService.getCategories();
+    this.displayedCategories = [];
+    this.loadMoreCategories();
+    if (this.infiniteScroll) {
+      this.infiniteScroll.disabled = false;
+    }
   }
 
+  loadMoreCategories(event?: any) {
+    setTimeout(() => {
+      const start = this.displayedCategories.length;
+      const end = start + this.CATEGORY_CHUNK_SIZE;
+      const newCategories = this.allCategories.slice(start, end);
+      this.displayedCategories = [
+        ...this.displayedCategories,
+        ...newCategories,
+      ];
+
+      if (event) {
+        event.target.complete();
+        if (this.displayedCategories.length >= this.allCategories.length) {
+          event.target.disabled = true;
+        }
+      }
+    }, 1);
+  }
   async openCategoryModal(category?: Category) {
     const modal = await this.modalCtrl.create({
       component: CategoryModalComponent,
@@ -71,7 +100,11 @@ export class CategoriesPage {
 
       this.categoryService.saveCategory(newCategory);
       this.newCategoryName = '';
-      this.loadCategories();
+      this.allCategories = this.categoryService.getCategories();
+      this.displayedCategories = [...this.allCategories];
+      if (this.infiniteScroll) {
+        this.infiniteScroll.disabled = true;
+      }
     }
   }
 
