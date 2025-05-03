@@ -1,4 +1,3 @@
-// app.routes.ts
 import { Routes } from '@angular/router';
 
 export const routes: Routes = [
@@ -11,28 +10,30 @@ export const routes: Routes = [
     children: [
       {
         path: 'home',
-        loadComponent: () => import('./home/home.page').then((m) => m.HomePage),
+        loadChildren: () =>
+          import('./home/home.module').then((m) => m.HomeModule),
       },
       {
         path: 'tasks',
-        loadComponent: () =>
-          import('./tasks/tasks.page').then((m) => m.TasksPage),
+        loadChildren: () =>
+          import('./tasks/tasks.module').then((m) => m.TasksModule),
       },
       {
         path: 'categories',
-        loadComponent: () =>
-          import('./categories/categories.page').then((m) => m.CategoriesPage),
+        loadChildren: () =>
+          import('./categories/categories.module').then(
+            (m) => m.CategoriesModule
+          ),
       },
       {
         path: '',
-        redirectTo: '/home',
+        redirectTo: 'home',
         pathMatch: 'full',
       },
     ],
   },
   {
-    path: '',
-    redirectTo: '/home',
-    pathMatch: 'full',
+    path: '**',
+    redirectTo: 'home',
   },
 ];

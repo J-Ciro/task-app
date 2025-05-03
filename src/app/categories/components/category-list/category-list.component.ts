@@ -30,4 +30,8 @@ export class CategoryListComponent {
   @Input() categories: Category[] = [];
   @Output() edit = new EventEmitter<Category>();
   @Output() delete = new EventEmitter<string>();
+
+  trackByCategoryId(index: number, category: Category): string {
+    return category.id;
+  }
 }

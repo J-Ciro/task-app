@@ -15,6 +15,7 @@ import { IonInfiniteScroll } from '@ionic/angular';
   selector: 'app-categories',
   templateUrl: 'categories.page.html',
   styleUrls: ['categories.page.scss'],
+  standalone: true,
   imports: [IonicModule, FormsModule, CommonModule, CategoryListComponent],
 })
 export class CategoriesPage {
@@ -54,22 +55,15 @@ export class CategoriesPage {
   }
 
   loadMoreCategories(event?: any) {
-    setTimeout(() => {
-      const start = this.displayedCategories.length;
-      const end = start + this.CATEGORY_CHUNK_SIZE;
-      const newCategories = this.allCategories.slice(start, end);
-      this.displayedCategories = [
-        ...this.displayedCategories,
-        ...newCategories,
-      ];
-
-      if (event) {
-        event.target.complete();
-        if (this.displayedCategories.length >= this.allCategories.length) {
-          event.target.disabled = true;
-        }
-      }
-    }, 1);
+    const start = this.displayedCategories.length;
+    const end = start + this.CATEGORY_CHUNK_SIZE;
+    const newCategories = this.allCategories.slice(start, end);
+    this.displayedCategories = [...this.displayedCategories, ...newCategories];
+    if (event) {
+      event.target.complete();
+      event.target.disabled =
+        this.displayedCategories.length >= this.allCategories.length;
+    }
   }
 
   async openCategoryModal(category?: Category) {

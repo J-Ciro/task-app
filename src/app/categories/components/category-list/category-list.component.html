@@ -1,5 +1,7 @@
 <ion-list>
-  <ion-item-sliding *ngFor="let category of categories">
+  <ion-item-sliding
+    *ngFor="let category of categories; trackBy: trackByCategoryId"
+  >
     <ion-item>
       <ion-label>
         <h2>{{ category.name }}</h2>
