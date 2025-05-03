@@ -59,10 +59,12 @@ export class TasksPage {
   }
 
   loadData() {
-    this.tasks = this.taskService.getTasks();
+    this.tasks = [...this.taskService.getTasks()].reverse();
+
     this.categories = this.categoryService
       .getCategories()
       .sort((a, b) => a.name.localeCompare(b.name));
+
     this.applyFilters();
   }
 
