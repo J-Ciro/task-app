@@ -79,7 +79,7 @@ export class FirebaseService {
     return this.featureStatusMap.get(featureKey)!.asObservable();
   }
 
-  public setupAutoRefresh(intervalMs: number = 60000): void {
+  public setupAutoRefresh(intervalMs: number = 60): void {
     setInterval(() => {
       this.refreshRemoteConfig().then((changed) => {
         if (changed) {
