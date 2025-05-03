@@ -1,37 +1,24 @@
+import { Component, ChangeDetectorRef } from '@angular/core';
 import {
+  IonHeader,
   IonToolbar,
   IonTitle,
-  IonHeader,
   IonContent,
-  IonItem,
-  IonSelect,
-  IonSelectOption,
   IonButton,
-  IonList,
-  IonItemSliding,
-  IonItemOptions,
-  IonItemOption,
-  IonCheckbox,
-  IonLabel,
   IonIcon,
-  IonSegment,
-  IonSegmentButton,
-  IonFooter,
-  IonBadge,
-  IonTabs,
+  IonButtons,
 } from '@ionic/angular/standalone';
-import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ModalController } from '@ionic/angular/standalone';
+import { TaskModalComponent } from '../shared/components/task-modal/task-modal.component';
+import { add, closeCircle } from 'ionicons/icons';
+import { addIcons } from 'ionicons';
+import { TaskFilterComponent } from './components/task-filter/task-filter.component';
+import { TaskListComponent } from './components/task-list/task-list.component';
+import { Category } from '../models/category.model';
+import { Task } from '../models/task.model';
 import { TaskService } from '../services/task.service';
 import { CategoryService } from '../services/category.service';
-import { Task } from '../models/task.model';
-import { Category } from '../models/category.model';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { ModalController, IonButtons } from '@ionic/angular/standalone';
-import { TaskModalComponent } from '../shared/components/task-modal/task-modal.component';
-import { add, close, closeCircle } from 'ionicons/icons';
-import { addIcons } from 'ionicons';
-import { ScrollingModule } from '@angular/cdk/scrolling';
 
 @Component({
   selector: 'app-tasks',
@@ -39,53 +26,32 @@ import { ScrollingModule } from '@angular/cdk/scrolling';
   styleUrls: ['./tasks.page.scss'],
   standalone: true,
   imports: [
-    IonBadge,
-    IonSegment,
     IonHeader,
-    IonTitle,
     IonToolbar,
-    IonItem,
-    IonButton,
-    IonLabel,
-    IonIcon,
-    CommonModule,
-    FormsModule,
-    IonButtons,
-    IonButton,
-    IonSegmentButton,
+    IonTitle,
     IonContent,
-    IonHeader,
-    IonTitle,
-    IonToolbar,
-    IonItemOption,
-    IonItemOptions,
-    IonItemSliding,
-    IonCheckbox,
-    IonSelect,
-    IonSelectOption,
-    ScrollingModule,
-    IonList,
+    IonButton,
+    IonIcon,
+    IonButtons,
+    CommonModule,
+    TaskFilterComponent,
+    TaskListComponent,
   ],
 })
 export class TasksPage {
   tasks: Task[] = [];
   filteredTasks: Task[] = [];
   categories: Category[] = [];
-  newTaskTitle = '';
   filterStatus: 'all' | 'completed' | 'pending' = 'all';
-  filters = {
-    categoryId: null as string | null,
-    showCompleted: true,
-    showPending: true,
-  };
   selectedCategoryId: string | null = null;
 
   constructor(
     private taskService: TaskService,
     private categoryService: CategoryService,
-    private modalCtrl: ModalController
+    private modalCtrl: ModalController,
+    private cdRef: ChangeDetectorRef
   ) {
-    addIcons({ add, closeCircle, close });
+    addIcons({ add, closeCircle });
   }
 
   ionViewWillEnter() {
@@ -99,10 +65,6 @@ export class TasksPage {
       .sort((a, b) => a.name.localeCompare(b.name));
     this.applyFilters();
   }
-
-  compareWithCategory = (o1: string | null, o2: string | null) => {
-    return o1 === o2;
-  };
 
   async openTaskModal(task?: Task) {
     const modal = await this.modalCtrl.create({
@@ -121,7 +83,6 @@ export class TasksPage {
     });
 
     await modal.present();
-
     const { data } = await modal.onWillDismiss();
 
     if (data) {
@@ -135,16 +96,23 @@ export class TasksPage {
   }
 
   applyFilters() {
-    const status = this.filterStatus;
-    const categoryId = this.selectedCategoryId;
     this.filteredTasks = this.tasks.filter((task) => {
-      const statusMatch =
-        status === 'all' ||
-        (status === 'completed' && task.completed) ||
-        (status === 'pending' && !task.completed);
-      const categoryMatch = !categoryId || task.categoryId === categoryId;
-      return statusMatch && categoryMatch;
+      if (
+        this.selectedCategoryId &&
+        task.categoryId !== this.selectedCategoryId
+      ) {
+        return false;
+      }
+      switch (this.filterStatus) {
+        case 'completed':
+          return task.completed;
+        case 'pending':
+          return !task.completed;
+        default:
+          return true;
+      }
     });
+    this.cdRef.detectChanges();
   }
 
   resetCategoryFilter() {
@@ -152,33 +120,8 @@ export class TasksPage {
     this.applyFilters();
   }
 
-  resetFilters() {
-    this.filters = {
-      categoryId: null,
-      showCompleted: true,
-      showPending: true,
-    };
-    this.applyFilters();
-  }
-
-  addTask() {
-    if (this.newTaskTitle.trim()) {
-      const newTask: Task = {
-        id: Date.now().toString(),
-        title: this.newTaskTitle,
-        completed: false,
-        categoryId: this.selectedCategoryId || null,
-      };
-
-      this.taskService.saveTask(newTask);
-      this.newTaskTitle = '';
-      this.selectedCategoryId = null;
-      this.loadData();
-    }
-  }
-
-  toggleTask(task: Task) {
-    this.taskService.toggleTaskCompletion(task.id);
+  toggleTaskCompletion(taskId: string) {
+    this.taskService.toggleTaskCompletion(taskId);
     this.loadData();
   }
 
@@ -187,18 +130,17 @@ export class TasksPage {
     this.loadData();
   }
 
-  toggleTaskCompletion(taskId: string) {
-    this.taskService.toggleTaskCompletion(taskId);
-    this.loadData();
+  onFilterStatusChange(status: 'all' | 'completed' | 'pending') {
+    setTimeout(() => {
+      this.filterStatus = status;
+      this.applyFilters();
+    }, 0);
   }
 
-  getCategoryName(categoryId: string | null): string {
-    if (!categoryId) return 'No Category';
-    const category = this.categories.find((c) => c.id === categoryId);
-    return category ? category.name : 'Unknown';
-  }
-
-  trackByTaskId(index: number, task: Task): string {
-    return task.id;
+  onCategoryChange(categoryId: string | null) {
+    setTimeout(() => {
+      this.selectedCategoryId = categoryId;
+      this.applyFilters();
+    }, 0);
   }
 }

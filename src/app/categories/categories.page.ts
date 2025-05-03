@@ -1,3 +1,4 @@
+import { CategoryListComponent } from './components/category-list/category-list.component';
 import { ModalController } from '@ionic/angular/standalone';
 import { IonicModule } from '@ionic/angular';
 import { Component, ViewChild } from '@angular/core';
@@ -9,12 +10,19 @@ import { CategoryModalComponent } from '../shared/components/category-modal/cate
 import { addIcons } from 'ionicons';
 import { create, trash } from 'ionicons/icons';
 import { IonInfiniteScroll } from '@ionic/angular';
+import { CategoryFormComponent } from './components/category-form/category-form.component';
 
 @Component({
   selector: 'app-categories',
   templateUrl: 'categories.page.html',
   styleUrls: ['categories.page.scss'],
-  imports: [IonicModule, FormsModule, CommonModule],
+  imports: [
+    IonicModule,
+    FormsModule,
+    CommonModule,
+    CategoryFormComponent,
+    CategoryListComponent,
+  ],
 })
 export class CategoriesPage {
   @ViewChild(IonInfiniteScroll) infiniteScroll!: IonInfiniteScroll;

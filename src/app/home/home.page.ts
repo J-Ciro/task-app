@@ -1,4 +1,3 @@
-// home.page.ts
 import { Component } from '@angular/core';
 import {
   IonHeader,
@@ -6,56 +5,36 @@ import {
   IonTitle,
   IonContent,
   IonButton,
-  IonList,
-  IonItem,
-  IonLabel,
-  IonCheckbox,
-  IonCard,
-  IonCardHeader,
-  IonCardTitle,
-  IonCardContent,
-  IonGrid,
-  IonRow,
-  IonCol,
-  IonIcon,
-  IonProgressBar,
   IonFab,
   IonFabButton,
+  IonIcon,
 } from '@ionic/angular/standalone';
 import { TaskService } from '../services/task.service';
 import { CommonModule } from '@angular/common';
 import { add, time, checkmarkDone, list } from 'ionicons/icons';
 import { addIcons } from 'ionicons';
 import { RouterLink } from '@angular/router';
+import { ProgressStatsComponent } from './components/progress-stats/progress-stats.component';
+import { TaskListComponent } from './components/task-list/task-list.component';
 
 @Component({
   selector: 'app-home',
-  templateUrl: 'home.page.html',
-  styleUrls: ['home.page.scss'],
+  templateUrl: './home.page.html',
+  styleUrls: ['./home.page.scss'],
   standalone: true,
   imports: [
-    IonContent,
-    IonTitle,
-    IonToolbar,
     IonHeader,
+    IonToolbar,
+    IonTitle,
+    IonContent,
     IonButton,
-    IonList,
-    IonItem,
-    IonLabel,
-    IonCheckbox,
-    IonCard,
-    IonCardHeader,
-    IonCardTitle,
-    IonCardContent,
-    IonGrid,
-    IonRow,
-    IonCol,
-    IonIcon,
-    IonProgressBar,
     IonFab,
     IonFabButton,
+    IonIcon,
     CommonModule,
     RouterLink,
+    ProgressStatsComponent,
+    TaskListComponent,
   ],
 })
 export class HomePage {
@@ -87,6 +66,11 @@ export class HomePage {
       .filter((task) => task.completed)
       .slice(-3)
       .reverse();
+
+    this.updateTaskStats(allTasks);
+  }
+
+  private updateTaskStats(allTasks: any[]) {
     this.taskStats.total = allTasks.length;
     this.taskStats.completed = allTasks.filter((task) => task.completed).length;
     this.taskStats.pending = this.taskStats.total - this.taskStats.completed;
@@ -99,5 +83,9 @@ export class HomePage {
   toggleTaskCompletion(taskId: string) {
     this.taskService.toggleTaskCompletion(taskId);
     this.loadTaskData();
+  }
+
+  onTaskClick(taskId: string) {
+    console.log('Task clicked:', taskId);
   }
 }

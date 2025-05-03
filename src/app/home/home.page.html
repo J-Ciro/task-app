@@ -6,96 +6,27 @@
   </ion-header>
 
   <div class="content-container">
-    <ion-card>
-      <ion-card-header>
-        <ion-card-title>Your Progress</ion-card-title>
-      </ion-card-header>
-      <ion-card-content>
-        <ion-grid>
-          <ion-row class="ion-text-center">
-            <ion-col size="4">
-              <h2>{{taskStats.total}}</h2>
-              <p>Total Tasks</p>
-            </ion-col>
-            <ion-col size="4">
-              <h2>{{taskStats.completed}}</h2>
-              <p>Completed</p>
-            </ion-col>
-            <ion-col size="4">
-              <h2>{{taskStats.pending}}</h2>
-              <p>Pending</p>
-            </ion-col>
-          </ion-row>
-          <ion-row>
-            <ion-col>
-              <ion-progress-bar
-                [value]="taskStats.completionPercentage / 100"
-                color="primary"
-              >
-              </ion-progress-bar>
-              <p class="ion-text-center">
-                {{taskStats.completionPercentage}}% complete
-              </p>
-            </ion-col>
-          </ion-row>
-        </ion-grid>
-      </ion-card-content>
-    </ion-card>
-    <ion-card>
-      <ion-card-header>
-        <ion-card-title>
-          <ion-icon name="time" slot="start"></ion-icon>
-          Recent Pending Tasks
-        </ion-card-title>
-      </ion-card-header>
-      <ion-card-content>
-        <ion-list
-          lines="none"
-          *ngIf="recentPendingTasks.length > 0; else noPendingTasks"
-        >
-          <ion-item *ngFor="let task of recentPendingTasks">
-            <ion-checkbox
-              slot="start"
-              [checked]="false"
-              (ionChange)="toggleTaskCompletion(task.id)"
-            >
-            </ion-checkbox>
-            <ion-label>{{task.title}}</ion-label>
-          </ion-item>
-        </ion-list>
-        <ng-template #noPendingTasks>
-          <p class="ion-text-center">No pending tasks. Great job!</p>
-        </ng-template>
-      </ion-card-content>
-    </ion-card>
+    <app-progress-stats [stats]="taskStats" />
 
-    <ion-card>
-      <ion-card-header>
-        <ion-card-title>
-          <ion-icon name="checkmark-done" slot="start"></ion-icon>
-          Recently Completed
-        </ion-card-title>
-      </ion-card-header>
-      <ion-card-content>
-        <ion-list
-          lines="none"
-          *ngIf="recentCompletedTasks.length > 0; else noCompletedTasks"
-        >
-          <ion-item *ngFor="let task of recentCompletedTasks">
-            <ion-checkbox
-              slot="start"
-              [checked]="true"
-              (ionChange)="toggleTaskCompletion(task.id)"
-            >
-            </ion-checkbox>
-            <ion-label>{{task.title}}</ion-label>
-          </ion-item>
-        </ion-list>
-        <ng-template #noCompletedTasks>
-          <p class="ion-text-center">No completed tasks yet</p>
-        </ng-template>
-      </ion-card-content>
-    </ion-card>
+    <app-task-list
+      [tasks]="recentPendingTasks"
+      title="Recent Pending Tasks"
+      icon="time"
+      emptyMessage="No pending tasks. Great job!"
+      (toggle)="toggleTaskCompletion($event)"
+      (taskClick)="onTaskClick($event)"
+    >
+    </app-task-list>
+
+    <app-task-list
+      [tasks]="recentCompletedTasks"
+      title="Recently Completed"
+      icon="checkmark-done"
+      emptyMessage="No completed tasks yet"
+      (toggle)="toggleTaskCompletion($event)"
+      (taskClick)="onTaskClick($event)"
+    >
+    </app-task-list>
   </div>
 
   <ion-fab slot="fixed" vertical="bottom" horizontal="end">
@@ -107,6 +38,7 @@
       <ion-icon name="add"></ion-icon>
     </ion-fab-button>
   </ion-fab>
+
   <ion-button
     expand="block"
     fill="clear"

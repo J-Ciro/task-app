@@ -1,3 +1,4 @@
+<!-- tasks.page.html -->
 <ion-header>
   <ion-toolbar>
     <ion-title>Tasks</ion-title>
@@ -8,92 +9,22 @@
     </ion-buttons>
   </ion-toolbar>
 
-  <ion-toolbar>
-    <ion-segment [(ngModel)]="filterStatus" (ionChange)="applyFilters()">
-      <ion-segment-button value="completed">
-        <ion-label>Completed</ion-label>
-      </ion-segment-button>
-      <ion-segment-button value="all">
-        <ion-label>All</ion-label>
-      </ion-segment-button>
-      <ion-segment-button value="pending">
-        <ion-label>Pending</ion-label>
-      </ion-segment-button>
-    </ion-segment>
-  </ion-toolbar>
-
-  <ion-toolbar>
-    <ion-item>
-      <ion-select
-        label="Filter by category"
-        placeholder="All categories"
-        [(ngModel)]="selectedCategoryId"
-        (ionChange)="applyFilters()"
-        interface="popover"
-        searchable="true"
-        searchPlaceholder="Search category..."
-        [compareWith]="compareWithCategory"
-      >
-        <ion-select-option [value]="null">All categories</ion-select-option>
-        <ng-container *ngFor="let category of categories">
-          <ion-select-option
-            [value]="category.id"
-            [style.--color]="category.color"
-          >
-            <ion-item lines="none" style="--min-height: 48px">
-              <ion-label>{{ category.name }}</ion-label>
-              <ion-badge
-                *ngIf="category.color"
-                [style.background]="category.color"
-                style="width: 16px; height: 16px; border-radius: 50%"
-              ></ion-badge>
-            </ion-item>
-          </ion-select-option>
-        </ng-container>
-      </ion-select>
-
-      <ion-button
-        fill="clear"
-        (click)="resetCategoryFilter()"
-        *ngIf="selectedCategoryId"
-      >
-        <ion-icon name="close-circle" slot="icon-only"></ion-icon>
-      </ion-button>
-    </ion-item>
-  </ion-toolbar>
+  <app-task-filter
+    [filterStatus]="filterStatus"
+    [selectedCategoryId]="selectedCategoryId"
+    [categories]="categories"
+    (statusChange)="onFilterStatusChange($event)"
+    (categoryChange)="onCategoryChange($event)"
+    (clearCategory)="resetCategoryFilter()"
+  ></app-task-filter>
 </ion-header>
 
 <ion-content>
-  <cdk-virtual-scroll-viewport
-    itemSize="50"
-    minBufferPx="400"
-    maxBufferPx="1350"
-  >
-    <ion-list>
-      <ion-item-sliding
-        *cdkVirtualFor="let task of filteredTasks;  trackBy: trackByTaskId"
-      >
-        <ion-item>
-          <ion-checkbox
-            slot="start"
-            [(ngModel)]="task.completed"
-            (ionChange)="toggleTaskCompletion(task.id)"
-          ></ion-checkbox>
-          <ion-label>
-            <h2>{{ task.title }}</h2>
-            <p>{{ getCategoryName(task.categoryId ?? null) }}</p>
-          </ion-label>
-        </ion-item>
-
-        <ion-item-options side="end">
-          <ion-item-option color="primary" (click)="openTaskModal(task)">
-            Edit
-          </ion-item-option>
-          <ion-item-option color="danger" (click)="deleteTask(task)">
-            Delete
-          </ion-item-option>
-        </ion-item-options>
-      </ion-item-sliding>
-    </ion-list>
-  </cdk-virtual-scroll-viewport>
+  <app-task-list
+    [tasks]="filteredTasks"
+    [categories]="categories"
+    (edit)="openTaskModal($event)"
+    (delete)="deleteTask($event)"
+    (toggle)="toggleTaskCompletion($event)"
+  ></app-task-list>
 </ion-content>

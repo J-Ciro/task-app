@@ -1,4 +1,23 @@
-cdk-virtual-scroll-viewport {
-    height: 100%;
-    width: 100%;
+ion-header {
+  ion-toolbar {
+    &:last-of-type {
+      --border-width: 0;
+    }
   }
+}
+
+app-task-list {
+  display: block;
+  height: calc(100vh - 180px);
+  overflow: hidden;
+  
+  ion-list {
+    background: transparent;
+  }
+}
+
+ion-segment-button {
+  --padding-start: 8px;
+  --padding-end: 8px;
+  min-width: auto;
+}

@@ -12,6 +12,7 @@ import {
   IonIcon,
 } from '@ionic/angular/standalone';
 import { CommonModule } from '@angular/common';
+import { ScrollingModule } from '@angular/cdk/scrolling';
 
 @Component({
   selector: 'app-task-list',
@@ -29,6 +30,7 @@ import { CommonModule } from '@angular/common';
     IonCheckbox,
     IonIcon,
     CommonModule,
+    ScrollingModule,
   ],
 })
 export class TaskListComponent {
