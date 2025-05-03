@@ -1,4 +1,5 @@
-import { Component, ChangeDetectorRef } from '@angular/core';
+import { FirebaseService } from './../services/firebase.service';
+import { Component, ChangeDetectorRef, OnInit, OnDestroy } from '@angular/core';
 import {
   IonHeader,
   IonToolbar,
@@ -7,6 +8,8 @@ import {
   IonIcon,
   IonFab,
   IonFabButton,
+  IonRefresher,
+  IonRefresherContent,
 } from '@ionic/angular/standalone';
 import { CommonModule } from '@angular/common';
 import { ModalController } from '@ionic/angular/standalone';
@@ -19,6 +22,7 @@ import { Category } from '../models/category.model';
 import { Task } from '../models/task.model';
 import { TaskService } from '../services/task.service';
 import { CategoryService } from '../services/category.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-tasks',
@@ -36,22 +40,52 @@ import { CategoryService } from '../services/category.service';
     TaskFilterComponent,
     TaskListComponent,
     IonFab,
+    IonRefresher,
+    IonRefresherContent,
   ],
 })
-export class TasksPage {
+export class TasksPage implements OnInit, OnDestroy {
   tasks: Task[] = [];
   filteredTasks: Task[] = [];
   categories: Category[] = [];
   filterStatus: 'all' | 'completed' | 'pending' = 'all';
   selectedCategoryId: string | null = null;
+  isAddTaskEnabled = true;
+
+  private featureSubscription: Subscription | null = null;
 
   constructor(
+    private firebaseService: FirebaseService,
     private taskService: TaskService,
     private categoryService: CategoryService,
     private modalCtrl: ModalController,
     private cdRef: ChangeDetectorRef
   ) {
     addIcons({ add, closeCircle });
+  }
+
+  async ngOnInit() {
+    try {
+      await this.firebaseService.initializeRemoteConfig();
+      this.firebaseService.setupAutoRefresh(300000);
+      this.featureSubscription = this.firebaseService
+        .watchFeature('add_task_feature_enabled')
+        .subscribe((enabled) => {
+          this.isAddTaskEnabled = enabled;
+          this.cdRef.detectChanges();
+        });
+    } catch (error) {
+      console.error('Failed to initialize Remote Config:', error);
+      this.isAddTaskEnabled = true;
+    }
+
+    this.loadData();
+  }
+
+  ngOnDestroy() {
+    if (this.featureSubscription) {
+      this.featureSubscription.unsubscribe();
+    }
   }
 
   ionViewWillEnter() {
@@ -66,6 +100,15 @@ export class TasksPage {
       .sort((a, b) => a.name.localeCompare(b.name));
 
     this.applyFilters();
+  }
+
+  async handleRefresh(event: any) {
+    const updated = await this.firebaseService.refreshRemoteConfig();
+    this.loadData();
+    event.target.complete();
+    if (updated) {
+      console.log('Remote config updated successfully');
+    }
   }
 
   async openTaskModal(task?: Task) {
