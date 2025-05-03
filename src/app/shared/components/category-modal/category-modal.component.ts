@@ -14,6 +14,7 @@ import {
   IonLabel,
   IonFooter,
   ModalController,
+  IonToast,
 } from '@ionic/angular/standalone';
 
 @Component({
@@ -22,6 +23,7 @@ import {
   styleUrls: ['./category-modal.component.scss'],
   standalone: true,
   imports: [
+    IonToast,
     CommonModule,
     FormsModule,
     IonHeader,
@@ -34,6 +36,7 @@ import {
     IonInput,
     IonLabel,
     IonFooter,
+    IonToast,
   ],
 })
 export class CategoryModalComponent {

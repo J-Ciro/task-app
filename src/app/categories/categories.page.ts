@@ -8,7 +8,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CategoryModalComponent } from '../shared/components/category-modal/category-modal.component';
 import { addIcons } from 'ionicons';
-import { create, trash } from 'ionicons/icons';
+import { add, create, trash } from 'ionicons/icons';
 import { IonInfiniteScroll } from '@ionic/angular';
 
 @Component({
@@ -31,7 +31,7 @@ export class CategoriesPage {
     private categoryService: CategoryService,
     private modalCtrl: ModalController
   ) {
-    addIcons({ trash, create });
+    addIcons({ trash, create, add });
   }
 
   ionViewWillEnter() {

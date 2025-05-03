@@ -35,9 +35,19 @@
 <ion-footer>
   <ion-toolbar>
     <ion-buttons slot="end">
-      <ion-button (click)="onSave()" [disabled]="!category.name.trim()" strong>
+      <ion-button
+        (click)="onSave()"
+        [disabled]="!category.name.trim()"
+        strong
+        id="save-category-button"
+      >
         Guardar
       </ion-button>
+      <ion-toast
+        trigger="save-category-button"
+        message="The category {{ category.name }} has been saved.! "
+        [duration]="1250"
+      ></ion-toast>
     </ion-buttons>
   </ion-toolbar>
 </ion-footer>
