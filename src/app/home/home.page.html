@@ -1,20 +1,50 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>
-      Blank
-    </ion-title>
-  </ion-toolbar>
-</ion-header>
-
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Blank</ion-title>
+  <ion-header>
+    <ion-toolbar color="primary">
+      <ion-title>Task Dashboard</ion-title>
     </ion-toolbar>
   </ion-header>
 
-  <div id="container">
-    <strong>Ready to create an app?</strong>
-    <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
+  <div class="content-container">
+    <app-progress-stats [stats]="taskStats" />
+
+    <app-task-list
+      [tasks]="recentPendingTasks"
+      title="Recent Pending Tasks"
+      icon="time"
+      emptyMessage="No pending tasks. Great job!"
+      (toggle)="toggleTaskCompletion($event)"
+      (taskClick)="onTaskClick($event)"
+    >
+    </app-task-list>
+
+    <app-task-list
+      [tasks]="recentCompletedTasks"
+      title="Recently Completed"
+      icon="checkmark-done"
+      emptyMessage="No completed tasks yet"
+      (toggle)="toggleTaskCompletion($event)"
+      (taskClick)="onTaskClick($event)"
+    >
+    </app-task-list>
   </div>
+
+  <ion-fab slot="fixed" vertical="bottom" horizontal="end">
+    <ion-fab-button
+      color="primary"
+      routerLink="/tasks"
+      [queryParams]="{openModal: 'true'}"
+    >
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
+  <ion-button
+    expand="block"
+    fill="clear"
+    routerLink="/tasks"
+    [queryParams]="{filter: 'all'}"
+  >
+    View All Tasks
+  </ion-button>
 </ion-content>

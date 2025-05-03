@@ -1,0 +1,35 @@
+.color-grid {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 10px;
+    gap: 10px;
+    justify-content: space-between;
+  }
+  
+  .color-option {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    border: 2px solid transparent;
+  }
+  
+  .color-option.selected {
+    transform: scale(1.1);
+    border: 2px solid #000;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
+  }
+  
+  .color-option:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+  }
+  
+  .color-preview {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin-left: 10px;
+    border: 1px solid #ccc;
+  }

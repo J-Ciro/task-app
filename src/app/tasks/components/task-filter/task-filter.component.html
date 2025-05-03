@@ -1,0 +1,50 @@
+<!-- task-filter.component.html -->
+<ion-toolbar>
+  <ion-segment [value]="filterStatus" (ionChange)="onStatusChange($event)">
+    <ion-segment-button value="completed">
+      <ion-label>Completed</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="all">
+      <ion-label>All</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="pending">
+      <ion-label>Pending</ion-label>
+    </ion-segment-button>
+  </ion-segment>
+</ion-toolbar>
+
+<ion-toolbar>
+  <ion-item>
+    <ion-select
+      label="Filter by category"
+      [value]="selectedCategoryId"
+      (ionChange)="onCategoryChange($event)"
+      interface="popover"
+      searchable="true"
+      searchPlaceholder="Search category..."
+      [compareWith]="compareWithCategory"
+    >
+      <ion-select-option [value]="null">All categories</ion-select-option>
+      <ng-container *ngFor="let category of categories">
+        <ion-select-option [value]="category.id">
+          <div style="display: flex; align-items: center; gap: 8px">
+            <span>{{ category.name }}</span>
+            <ion-badge
+              *ngIf="category.color"
+              [style.background]="category.color"
+              style="width: 16px; height: 16px; border-radius: 50%"
+            ></ion-badge>
+          </div>
+        </ion-select-option>
+      </ng-container>
+    </ion-select>
+
+    <ion-button
+      fill="clear"
+      (click)="clearCategory.emit()"
+      *ngIf="selectedCategoryId"
+    >
+      <ion-icon name="close-circle" slot="icon-only"></ion-icon>
+    </ion-button>
+  </ion-item>
+</ion-toolbar>

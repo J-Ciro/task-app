@@ -1,0 +1,67 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>{{ task.title ? "Edit Task" : "New Task" }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="modal.dismiss(onCancel())">Cancel</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div class="form-container">
+    <ion-item>
+      <ion-input [(ngModel)]="task.title" placeholder="Task title"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>Category</ion-label>
+      <ion-select [(ngModel)]="task.categoryId" interface="action-sheet">
+        <ion-select-option [value]="null">No Category</ion-select-option>
+        <ion-select-option *ngFor="let cat of categories" [value]="cat.id">
+          {{ cat.name }}
+        </ion-select-option>
+      </ion-select>
+    </ion-item>
+  </div>
+
+  <div class="quote-container">
+    <p class="inspirational-quote">
+      If I cannot do great things, I can do small things in a great way.
+    </p>
+  </div>
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button
+        color="danger"
+        (click)="modal.dismiss(onDelete())"
+        *ngIf="task.id"
+        id="open-delete-toast"
+      >
+        Delete
+      </ion-button>
+      <ion-toast
+        trigger="open-delete-toast"
+        message="The task {{ task.title }} has been removed."
+        [duration]="1300"
+      ></ion-toast>
+    </ion-buttons>
+    <ion-button
+      slot="end"
+      (click)="modal.dismiss(onSave())"
+      [disabled]="!task.title.trim()"
+      strong
+      id="open-save-toast"
+    >
+      Save
+    </ion-button>
+
+    <ion-toast
+      trigger="open-save-toast"
+      message="The task {{ task.title }} has been saved."
+      [duration]="1300"
+    ></ion-toast>
+  </ion-toolbar>
+</ion-footer>

@@ -1,0 +1,12 @@
+<ion-item>
+  <ion-input
+    [(ngModel)]="category.name"
+    placeholder="Category name"
+  ></ion-input>
+  <ion-button slot="end" (click)="save.emit()">{{
+    editing ? "Update" : "Add"
+  }}</ion-button>
+  <ion-button *ngIf="editing" slot="end" fill="clear" (click)="cancel.emit()"
+    >Cancel</ion-button
+  >
+</ion-item>

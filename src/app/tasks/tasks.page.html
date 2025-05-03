@@ -1,0 +1,35 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Categories</ion-title>
+  </ion-toolbar>
+
+  <app-task-filter
+    [filterStatus]="filterStatus"
+    [selectedCategoryId]="selectedCategoryId"
+    [categories]="categories"
+    (statusChange)="onFilterStatusChange($event)"
+    (categoryChange)="onCategoryChange($event)"
+    (clearCategory)="resetCategoryFilter()"
+  ></app-task-filter>
+</ion-header>
+
+<ion-content>
+  <app-task-list
+    [tasks]="filteredTasks"
+    [categories]="categories"
+    (edit)="openTaskModal($event)"
+    (delete)="deleteTask($event)"
+    (toggle)="toggleTaskCompletion($event)"
+  ></app-task-list>
+  <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  @if (isAddTaskEnabled) {
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button (click)="openTaskModal()">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+  }
+</ion-content>

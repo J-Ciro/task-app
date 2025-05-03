@@ -1,0 +1,21 @@
+ion-item-sliding {
+    transition: transform 0.2s ease-out, opacity 0.2s ease;
+  
+    &.animate-item {
+      will-change: transform, opacity;
+    }
+  
+    ion-item {
+      --min-height: 60px;
+    }
+  }
+  
+  ion-list {
+    background: transparent;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+  
+  ion-item-option {
+    padding: 0 1rem;
+  }

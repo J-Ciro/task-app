@@ -63,6 +63,7 @@
             },
             "development": {
               "optimization": false,
+              "aot": false,
               "extractLicenses": false,
               "sourceMap": true,
               "namedChunks": true
@@ -129,7 +130,10 @@
     }
   },
   "cli": {
-    "schematicCollections": ["@ionic/angular-toolkit"]
+    "schematicCollections": [
+      "@ionic/angular-toolkit"
+    ],
+    "analytics": false
   },
   "schematics": {
     "@ionic/angular-toolkit:component": {
