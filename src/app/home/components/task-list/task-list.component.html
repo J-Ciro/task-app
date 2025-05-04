@@ -7,7 +7,11 @@
   </ion-card-header>
   <ion-card-content>
     <ion-list lines="none" *ngIf="tasks.length > 0; else emptyTemplate">
-      <ion-item *ngFor="let task of tasks" (click)="onTaskClick(task.id)">
+      <ion-item
+        *ngFor="let task of tasks"
+        (click)="onTaskClick(task.id)"
+        [ngClass]="{ 'completed-task': task.completed }"
+      >
         <ion-checkbox
           slot="start"
           [checked]="task.completed"

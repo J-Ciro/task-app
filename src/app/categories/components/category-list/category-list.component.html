@@ -1,25 +1,35 @@
-<ion-list>
-  <ion-item-sliding
-    *ngFor="let category of categories; trackBy: trackByCategoryId"
-  >
-    <ion-item>
-      <ion-label>
-        <h2>{{ category.name }}</h2>
-      </ion-label>
-      <div
-        slot="start"
-        [style.background]="category.color"
-        style="width: 20px; height: 20px; border-radius: 50%"
-      ></div>
-    </ion-item>
+<ion-grid>
+  <ion-row>
+    <ion-col sizeMd="4" offsetMd="4">
+      <ion-list>
+        <ion-item-sliding
+          *ngFor="let category of categories; trackBy: trackByCategoryId"
+        >
+          <ion-item>
+            <ion-label>
+              <h2>{{ category.name }}</h2>
+            </ion-label>
+            <div
+              slot="start"
+              [style.background]="category.color"
+              style="width: 20px; height: 20px; border-radius: 50%"
+            ></div>
+          </ion-item>
 
-    <ion-item-options side="end">
-      <ion-item-option color="primary" (click)="edit.emit(category)">
-        <ion-icon name="create"></ion-icon>
-      </ion-item-option>
-      <ion-item-option color="danger" (click)="delete.emit(category.id)">
-        <ion-icon name="trash"></ion-icon>
-      </ion-item-option>
-    </ion-item-options>
-  </ion-item-sliding>
-</ion-list>
+          <ion-item-options side="end">
+            <ion-item-option
+              color="primary"
+              size="medium"
+              (click)="edit.emit(category)"
+            >
+              <ion-icon name="create-outline" size="medium"></ion-icon>
+            </ion-item-option>
+            <ion-item-option color="danger" (click)="delete.emit(category.id)">
+              <ion-icon name="trash-outline" size="medium" />
+            </ion-item-option>
+          </ion-item-options>
+        </ion-item-sliding>
+      </ion-list>
+    </ion-col>
+  </ion-row>
+</ion-grid>

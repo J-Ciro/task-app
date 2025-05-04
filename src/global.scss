@@ -35,3 +35,18 @@
 /* @import "@ionic/angular/css/palettes/dark.always.css"; */
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
 @import '@ionic/angular/css/palettes/dark.system.css';
+
+
+.completed-task {
+    color: gray;
+    text-decoration-line: line-through;
+    
+    ion-label {
+      color: inherit;
+      text-decoration-line: inherit;
+    }
+  }
+
+  ion-icon {
+    font-size: 18px; /* Any pixel value */
+  }
