@@ -18,12 +18,15 @@ import {
   IonInfiniteScrollContent,
   IonContent,
   IonToast,
+  IonIcon,
 } from '@ionic/angular/standalone';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { Category } from 'src/app/models/category.model';
 import { Task } from 'src/app/models/task.model';
+import { addIcons } from 'ionicons';
+import { create, trash, createOutline, trashOutline } from 'ionicons/icons';
 
 @Component({
   selector: 'app-task-list',
@@ -31,6 +34,7 @@ import { Task } from 'src/app/models/task.model';
   styleUrls: ['./task-list.component.scss'],
   standalone: true,
   imports: [
+    IonIcon,
     IonContent,
     IonList,
     IonItemSliding,
@@ -63,7 +67,9 @@ export class TaskListComponent {
   initialLoadCount = 20;
   itemsPerLoad = 10;
 
-  constructor(private cdRef: ChangeDetectorRef) {}
+  constructor(private cdRef: ChangeDetectorRef) {
+    addIcons({ createOutline, trashOutline, create, trash });
+  }
 
   trackByTaskId(index: number, task: Task): string {
     return task.id;

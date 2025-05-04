@@ -19,3 +19,11 @@ ion-item-sliding {
   ion-item-option {
     padding: 0 1rem;
   }
+
+  ion-checkbox::part(container) {
+    border-radius: 100px;
+    padding: 10px;
+    border: 2px solid var(--ion-color-primary);
+  }
+
+  

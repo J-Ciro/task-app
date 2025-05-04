@@ -11,7 +11,13 @@ import {
 } from '@ionic/angular/standalone';
 import { TaskService } from '../services/task.service';
 import { CommonModule } from '@angular/common';
-import { add, time, checkmarkDone, list } from 'ionicons/icons';
+import {
+  add,
+  time,
+  checkmarkDone,
+  list,
+  notificationsOutline,
+} from 'ionicons/icons';
 import { addIcons } from 'ionicons';
 import { RouterLink } from '@angular/router';
 import { ProgressStatsComponent } from './components/progress-stats/progress-stats.component';
@@ -48,7 +54,7 @@ export class HomePage {
   };
 
   constructor(private taskService: TaskService) {
-    addIcons({ add, time, checkmarkDone, list });
+    addIcons({ notificationsOutline, add, time, checkmarkDone, list });
   }
 
   ionViewWillEnter() {

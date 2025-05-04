@@ -20,7 +20,7 @@ import {
 import { CommonModule } from '@angular/common';
 import { ModalController } from '@ionic/angular/standalone';
 import { TaskModalComponent } from '../shared/components/task-modal/task-modal.component';
-import { add, closeCircle } from 'ionicons/icons';
+import { add, closeCircle, listOutline } from 'ionicons/icons';
 import { addIcons } from 'ionicons';
 import { TaskFilterComponent } from './components/task-filter/task-filter.component';
 import { TaskListComponent } from './components/task-list/task-list.component';
@@ -68,7 +68,7 @@ export class TasksPage implements OnInit, OnDestroy {
     private modalCtrl: ModalController,
     private cdRef: ChangeDetectorRef
   ) {
-    addIcons({ add, closeCircle });
+    addIcons({ listOutline, add, closeCircle });
   }
 
   async ngOnInit() {

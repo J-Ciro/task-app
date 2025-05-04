@@ -2,7 +2,7 @@
   <ion-list>
     @for (task of displayedTasks; track trackByTaskId($index, task)) {
     <ion-item-sliding>
-      <ion-item>
+      <ion-item [ngClass]="{ 'completed-task': task.completed }">
         <ion-checkbox
           slot="start"
           [checked]="task.completed"
@@ -16,14 +16,14 @@
 
       <ion-item-options side="end">
         <ion-item-option color="primary" (click)="edit.emit(task)">
-          Edit
+          <ion-icon name="create-outline" />
         </ion-item-option>
         <ion-item-option
           color="danger"
           (click)="delete.emit(task)"
           id="open-delete-toast"
         >
-          Delete
+          <ion-icon name="trash-outline" />
         </ion-item-option>
       </ion-item-options>
     </ion-item-sliding>
