@@ -112,6 +112,8 @@ export class TasksPage implements OnInit, OnDestroy {
       .sort((a, b) => a.name.localeCompare(b.name));
 
     this.applyFilters();
+
+    this.cdRef.markForCheck();
   }
 
   async handleRefresh(event: any) {

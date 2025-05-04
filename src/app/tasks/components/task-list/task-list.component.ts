@@ -91,8 +91,6 @@ export class TaskListComponent {
       this.displayedTasks = [...this.displayedTasks, ...moreTasks];
 
       event.target.complete();
-
-      // Deshabilitar si hemos cargado todas las tareas
       if (this.displayedTasks.length >= this._allTasks.length) {
         event.target.disabled = true;
       }
